@@ -29,6 +29,10 @@ func main() {
 	msgCount := 0
 
 	//Get signal for finish
+	//a goroutine that continuously listens for messages, errors and termination signals from the Kafka consumer
+	//It starts a goroutine to handle signals (SIGINT, SIGTERM) for graceful shutdown.
+	//Inside the goroutine, it listens for errors, consumed messages, and signals.
+	//It increments msgCount for each message consumed
 	doneCh := make(chan struct{})
 	go func() {
 		for {
@@ -43,7 +47,7 @@ func main() {
 			}
 		}
 	}()
-
+	//waits for a signal (<-doneCh) to finish execution gracefully
 	<-doneCh
 	fmt.Println("Processed", msgCount, "messages")
 
